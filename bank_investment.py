@@ -555,6 +555,12 @@ def get_stock_Market_data(filename):
                 " because you don't have permission.")
         return stock_data
 
+def export_stock_pdf():
+     """Save the current file as a new file."""
+    filepath = asksaveasfilename(
+        defaultextension=".txt",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+    )
 
 # ...
 def save_file():
