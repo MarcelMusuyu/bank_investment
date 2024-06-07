@@ -1,0 +1,2 @@
+name 'balance' is not definedIncorrect number of bindings supplied. The current statement uses 1, and there are 4 supplied. 2024-06-05 14:32:49.918294name 'stock_symbol' is not defined 2024-06-05 14:38:35.487198
+ 2024-06-06 09:04:46.574950 'NoneType' object is not subscriptable
