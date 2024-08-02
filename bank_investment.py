@@ -44,6 +44,7 @@ from datetime import datetime
 # Import a database_request module
 from database_request import *
 from tkinter.ttk import Treeview,Sizegrip
+from Gemini import get_response
 
 
 import re
@@ -144,14 +145,14 @@ class App(customtkinter.CTk):
         
 
         # configure window
-        self.title("Bank Investment")
+        self.title("CongoInvestment")
         self.geometry(f"{1180}x{580}")
         self.resizable(False, False)
         
         
         #setup menu
         set_menu(self)
-        #self.iconbitmap("icons/emblem-advertisement-dollar.ico")
+        self.iconbitmap("icons/flag-cg.ico")
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
@@ -161,7 +162,7 @@ class App(customtkinter.CTk):
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(5, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Bank Investment", font=customtkinter.CTkFont(size=25, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Congo Investment", font=customtkinter.CTkFont(size=25, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
       
         try:
@@ -183,13 +184,13 @@ class App(customtkinter.CTk):
             print(f"Error: cannot read image file because you don't have permission.")
         #img5=customtkinter.CTkImage(dark_image=img4)
         
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame,image=img1,text="Portfolio", fg_color="transparent",font=customtkinter.CTkFont( weight="bold"), command=self.sidebar_button_event,compound="left")
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame,image=img1,text="Portfolio \n Overview", fg_color="transparent",font=customtkinter.CTkFont( weight="bold"), command=self.sidebar_button_event,compound="left")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_4 = customtkinter.CTkButton(self.sidebar_frame,image=img4,text="Investment", fg_color="transparent",font=customtkinter.CTkFont(weight="bold"), command=self.sidebar_button_event2,compound="left")
+        self.sidebar_button_4 = customtkinter.CTkButton(self.sidebar_frame,image=img4,text="Investments", fg_color="transparent",font=customtkinter.CTkFont(weight="bold"), command=self.sidebar_button_event2,compound="left")
         self.sidebar_button_4.grid(row=2, column=0, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame,image=img2,text="Trading \n History", fg_color="transparent",font=customtkinter.CTkFont(weight="bold"), command=self.sidebar_button_event,compound="left")
         self.sidebar_button_2.grid(row=4, column=0, padx=20, pady=10)
-        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame,image=img3,text="Market \n Analysis", fg_color="transparent",font=customtkinter.CTkFont(weight="bold"), command=self.sidebar_button_event,compound="left")
+        self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame,image=img3,text="Market \n Insights", fg_color="transparent",font=customtkinter.CTkFont(weight="bold"), command=self.sidebar_button_event,compound="left")
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
         
         
@@ -291,10 +292,22 @@ class App(customtkinter.CTk):
         self.sidebar_button_3 = customtkinter.CTkButton(self.scrollable_frame,text="Get balance",fg_color="#212529",image=img9, command=self.open_input_dialog_event)
         self.sidebar_button_3.grid(row=2, column=3, padx=5, pady=10)
 
-        
+        self.scrollable_frame3 = customtkinter.CTkScrollableFrame(self.tabview.tab("Companies"), label_text="Stock Market")
+        self.scrollable_frame3.grid(row=0, column=0, padx=(20, 20), pady=(20, 50), sticky="nsew")
+        self.scrollable_frame3.grid_columnconfigure(0, weight=1)
        
+        self.gemini_input=customtkinter.CTkEntry(master=self.scrollable_frame3,placeholder_text="Prompt",corner_radius=5)
+       
+        self.gemini_input.grid(row=0, column=0, pady=5, padx=20, sticky="n")
+        self.gemini_label=customtkinter.CTkLabel(self.scrollable_frame3, text=f"Response")
+        self.gemini_label.grid(row=1,column=0,padx=20,columnspan=2, pady=(20, 10))
+    
+        self.gemini_button= customtkinter.CTkButton(master=self.scrollable_frame3,text="Chat",command=lambda:get_gemini_chat(self.gemini_label,get_response(self.gemini_input.get())))
+        self.gemini_button.grid(row=2, column=0, pady=5, padx=20, sticky="n")
+       
+           
         
-        
+        #)
         # create slider and progressbar frame
         self.slider_progressbar_frame = customtkinter.CTkFrame(self, fg_color="transparent")
         self.slider_progressbar_frame.grid(row=1, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
@@ -383,6 +396,8 @@ class App(customtkinter.CTk):
         # Bind the format_card_number function to the KeyRelease event of the input_1card widget
         self.input_1.bind("<KeyRelease>", format_card_number)
    
+     
+        
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type account number:", title="Get Balance")
@@ -590,6 +605,10 @@ def get_account_balance(account_number, bank_name,sidebar_input_2):
     sidebar_input_2.configure(state="normal")
     sidebar_input_2.insert(0, f'${balance}')
     sidebar_input_2.configure(state="readonly")
+def get_gemini_chat(gemini_label,input,additional=""):
+    print(input)  
+    gemini_label.configure(text="")  # Clear the label's text
+    gemini_label.configure(text=input)  # Set the label's text to the input
     
     
     

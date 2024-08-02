@@ -1,12 +1,14 @@
 import google.generativeai as genai
 import os
 
-genai.configure(api_key=os.environ["AIzaSyArr-AcewxlEklUiC5ivMAvSJ5X_QJkKMo"])
-def main():
-   
-    model = genai.GenerativeModel('gemini-1.0-pro-latest')
-    response = model.generate_content("The opposite of hot is")
-    print(response.text)
-    
+# Charger la clé API à partir d'un fichier de configuration
+with open("config.txt", "r") as f:
+    api_key = f.read().strip()
 
-if __name__ ==
+genai.configure(api_key=api_key)
+def get_response(request):
+   
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(request)
+    return response.text
+    
