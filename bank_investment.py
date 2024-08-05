@@ -145,14 +145,14 @@ class App(customtkinter.CTk):
         
 
         # configure window
-        self.title("CongoInvestment")
+        self.title("GeminiInvestment")
         self.geometry(f"{1180}x{580}")
         self.resizable(False, False)
         
         
         #setup menu
         set_menu(self)
-        self.iconbitmap("icons/flag-cg.ico")
+        self.iconbitmap("icons/google-gemini-icon.ico")
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
@@ -162,7 +162,7 @@ class App(customtkinter.CTk):
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(5, weight=1)
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Congo Investment", font=customtkinter.CTkFont(size=25, weight="bold"))
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Gemini Investment", font=customtkinter.CTkFont(size=25, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
       
         try:
@@ -221,9 +221,9 @@ class App(customtkinter.CTk):
         self.tabview.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew",columnspan=3)
         self.tabview.add("Stock")
         self.tabview.add("Banks")
-        self.tabview.add("Companies")
+        self.tabview.add("Invest With Gemini")
         self.tabview.tab("Stock").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
-        self.tabview.tab("Companies").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Invest With Gemini").grid_columnconfigure(0, weight=1)
         
        
        
@@ -292,18 +292,20 @@ class App(customtkinter.CTk):
         self.sidebar_button_3 = customtkinter.CTkButton(self.scrollable_frame,text="Get balance",fg_color="#212529",image=img9, command=self.open_input_dialog_event)
         self.sidebar_button_3.grid(row=2, column=3, padx=5, pady=10)
 
-        self.scrollable_frame3 = customtkinter.CTkScrollableFrame(self.tabview.tab("Companies"), label_text="Stock Market")
+        self.scrollable_frame3 = customtkinter.CTkScrollableFrame(self.tabview.tab("Invest With Gemini"), label_text="Stock Market")
         self.scrollable_frame3.grid(row=0, column=0, padx=(20, 20), pady=(20, 50), sticky="nsew")
         self.scrollable_frame3.grid_columnconfigure(0, weight=1)
        
-        self.gemini_input=customtkinter.CTkEntry(master=self.scrollable_frame3,placeholder_text="Prompt",corner_radius=5)
-       
-        self.gemini_input.grid(row=0, column=0, pady=5, padx=20, sticky="n")
+       # Data input area
+        self.data_input = customtkinter.CTkTextbox(self.scrollable_frame3, height=5)
+        self.data_input.grid(row=0, column=0,rowspan=3, pady=5, padx=20, sticky="nsew")
+        # self.gemini_input=customtkinter.CTkEntry(master=self.scrollable_frame3,placeholder_text="Prompt",corner_radius=5)
+        # self.gemini_input.grid(row=0, column=1, pady=5, padx=20, sticky="n")
         self.gemini_label=customtkinter.CTkLabel(self.scrollable_frame3, text=f"Response")
-        self.gemini_label.grid(row=1,column=0,padx=20,columnspan=2, pady=(20, 10))
+        self.gemini_label.grid(row=3,column=0,padx=20,columnspan=2, pady=(20, 10))
     
-        self.gemini_button= customtkinter.CTkButton(master=self.scrollable_frame3,text="Chat",command=lambda:get_gemini_chat(self.gemini_label,get_response(self.gemini_input.get())))
-        self.gemini_button.grid(row=2, column=0, pady=5, padx=20, sticky="n")
+        self.gemini_button= customtkinter.CTkButton(master=self.scrollable_frame3,text="Chat",command=lambda:get_gemini_chat(self.gemini_label,self.data_input.get("1.0", tk.END)))
+        self.gemini_button.grid(row=4, column=0, pady=5, padx=20, sticky="n")
        
            
         
@@ -313,8 +315,10 @@ class App(customtkinter.CTk):
         self.slider_progressbar_frame.grid(row=1, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
         self.slider_progressbar_frame.grid_columnconfigure(0, weight=1)
         self.slider_progressbar_frame.grid_rowconfigure(4, weight=1)
-        self.seg_button_1 = customtkinter.CTkSegmentedButton(self.slider_progressbar_frame)
-        self.seg_button_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+        gemini=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "google-gemini-icon.webp")))
+        self.sidebar_button_1 = customtkinter.CTkButton(self.slider_progressbar_frame,image=gemini,text="Invest with Gemini", fg_color="transparent",font=customtkinter.CTkFont( weight="bold"), command=self.sidebar_button_event,compound="left")
+        self.sidebar_button_1.grid(row=0, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+      
         self.progressbar_1 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
         self.progressbar_1.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
         self.progressbar_2 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
@@ -390,8 +394,8 @@ class App(customtkinter.CTk):
         self.progressbar_1.configure(mode="indeterminnate")
         self.progressbar_1.start()
         #self.textbox.insert("0.0", "CTkTextbox\n\n" + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.\n\n" * 20)
-        self.seg_button_1.configure(values=["CTkSegmentedButton", "Value 2", "Value 3"])
-        self.seg_button_1.set("Value 2")
+        # self.seg_button_1.configure(values=["CTkSegmentedButton", "Value 2", "Value 3"])
+        # self.seg_button_1.set("Value 2")
     
         # Bind the format_card_number function to the KeyRelease event of the input_1card widget
         self.input_1.bind("<KeyRelease>", format_card_number)
@@ -606,13 +610,31 @@ def get_account_balance(account_number, bank_name,sidebar_input_2):
     sidebar_input_2.insert(0, f'${balance}')
     sidebar_input_2.configure(state="readonly")
 def get_gemini_chat(gemini_label,input,additional=""):
-    print(input)  
+    #print(input)  
     gemini_label.configure(text="")  # Clear the label's text
     gemini_label.configure(text=input)  # Set the label's text to the input
+    # Get the stock market data
+    stock_data = get_stock_data()
+
+    # Convert the stock data to a string for Gemini
+    data_string = "\n".join([f"{d['Last Date/Time']},{d['Symbol']},{d['Market']},{d['Volume']},{d['Open']},{d['High']},{d['Trading Currency']}" for d in stock_data])
+
+    # Combine the data with the user's input
+    full_input = f"{data_string}\n\n{input}"
+
+    # Get the response from Gemini
+    response = get_response(full_input)
+
+
+    # Update the label with the Gemini response
+    gemini_label.configure(text=response)
     
     
-    
-    
+def get_stock_data():
+    with open("dataSetEuronext_Equities.csv","r") as file:
+       reader= csv.DictReader(file)
+       data=list(reader)
+    return data 
        
 def transfer_money(account_number_from, account_number_to, amount):
     """Transfer money from one account to another."""
@@ -635,7 +657,7 @@ def select_commande(id):
 def commande_0():
     global picture1
     app = customtkinter.CTk()
-    app.geometry("600x320")
+    app.geometry("800x400")
     app.title("Add Stock Order")
     app.resizable(False,False)
     app.grid_columnconfigure(1, weight=1)
